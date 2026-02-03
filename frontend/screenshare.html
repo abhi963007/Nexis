@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archat | Screen Share</title>
+    <link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-light: #f8f9fa;
+            --surface: #ffffff;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --success: #1e8e3e;
+            --danger: #d93025;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--surface);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            /* Take up space to push logo to center */
+        }
+
+        .nav-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f1f3f4;
+            color: var(--text-dark);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .logo-icon {
+            color: var(--success);
+            font-size: 24px;
+        }
+
+        /* --- Main Content --- */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 24px;
+            width: 100%;
+        }
+
+        .room-selection {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .room-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .room-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: #e6f4ea;
+            /* Light green for screenshare */
+            color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .room-icon-wrapper i {
+            font-size: 40px;
+        }
+
+        .room-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .room-desc {
+            font-size: 15px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .room-id-box {
+            background: #f1f3f4;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 32px;
+        }
+
+        .room-id-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--success);
+            letter-spacing: 1px;
+        }
+
+        .room-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 24px;
+            transition: 0.2s;
+        }
+
+        .room-input:focus {
+            outline: none;
+            border-color: var(--success);
+            box-shadow: 0 0 0 1px var(--success);
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 14px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-full:hover {
+            background: #137333;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Share Interface --- */
+        .share-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .share-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 12px 0;
+            margin-bottom: 8px;
+        }
+
+        .s-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .s-room-id {
+            background: #e6f4ea;
+            border: 1px solid #ceead6;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--success);
+        }
+
+        .encrypted-badge {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            color: var(--success);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 6px 12px;
+            background: rgba(30, 142, 62, 0.05);
+            border-radius: 20px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .copy-btn:hover {
+            color: var(--primary);
+        }
+
+        .s-main-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .s-video-wrapper {
+            background: #202124;
+            border-radius: var(--radius-lg);
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        #screenVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .v-placeholder {
+            text-align: center;
+            color: #5f6368;
+        }
+
+        .v-placeholder i {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .s-sidebar {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .s-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .s-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .s-ctrl-btn {
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .s-btn-start {
+            background: var(--success);
+            color: white;
+        }
+
+        .s-btn-start:hover {
+            background: #137333;
+        }
+
+        .s-btn-stop {
+            background: var(--danger);
+            color: white;
+        }
+
+        .s-btn-stop:hover {
+            background: #b71c1c;
+        }
+
+        .s-tips {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .s-tip-item {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .s-tip-item i {
+            color: var(--success);
+            font-size: 18px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .s-main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar" id="selectionNavbar">
+        <div class="nav-left">
+            <a href="dashboard.html" class="back-btn">
+                <i class="material-icons-outlined">arrow_back</i>
+                Back to Dashboard
+            </a>
+        </div>
+        <div class="nav-center">
+            <a href="#" class="logo-box">
+                <span class="material-icons-outlined logo-icon">present_to_all</span>
+                <span>Screen Sharing</span>
+            </a>
+        </div>
+        <div class="nav-right">
+            <!-- Space for user profile if needed -->
+        </div>
+    </nav>
+
+    <div class="main-container" id="selectionContainer">
+        <!-- Room Selection -->
+        <div id="roomSelection" class="room-selection">
+            <!-- Create Room Section -->
+            <div id="createRoom" class="room-card" style="display: none;">
+                <div class="room-icon-wrapper">
+                    <i class="material-icons-outlined">screen_share</i>
+                </div>
+                <h1 class="room-title">New Share Session</h1>
+                <p class="room-desc">Prepare to present your screen. Share the room ID below with your audience to let
+                    them see your view.</p>
+                <div class="room-id-box">
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 4px;">ROOM ID</p>
+                    <p id="newRoomId" class="room-id-value"></p>
+                </div>
+                <button onclick="enterRoom()" class="btn-full">Enter Room</button>
+            </div>
+
+            <!-- Join Room Section -->
+            <div id="joinRoom" class="room-card" style="display: none;">
+                <div class="room-icon-wrapper">
+                    <i class="material-icons-outlined">visibility</i>
+                </div>
+                <h1 class="room-title">Join a Stream</h1>
+                <p class="room-desc">Enter the room ID provided by the presenter to view their shared screen in
+                    real-time.</p>
+                <input type="text" id="roomIdInput" class="room-input" placeholder="Enter Room ID">
+                <button onclick="joinExistingRoom()" class="btn-full">Join Session</button>
+            </div>
+        </div>
+
+        <!-- Share Room Interface -->
+        <div id="screenRoom" class="share-container" style="display: none;">
+            <div class="share-header">
+                <div class="s-info">
+                    <h2 style="font-size: 20px; font-weight: 500;">Sharing Workspace</h2>
+                    <div class="s-room-id">
+                        <span>ID: <strong id="roomId"></strong></span>
+                        <button onclick="copyRoomId()" class="copy-btn">
+                            <i class="material-icons-outlined" style="font-size: 18px;">content_copy</i>
+                        </button>
+                    </div>
+                </div>
+                <div class="encrypted-badge">
+                    <i class="material-icons-outlined" style="font-size: 18px;">verified_user</i>
+                    Encrypted Stream
+                </div>
+            </div>
+
+            <div class="s-main-grid">
+                <div class="s-video-wrapper">
+                    <div class="v-placeholder" id="placeholder">
+                        <i class="material-icons-outlined">monitor</i>
+                        <p>No active stream. Start sharing to begin.</p>
+                    </div>
+                    <video id="screenVideo" autoplay playsinline></video>
+                </div>
+
+                <div class="s-sidebar">
+                    <div>
+                        <h3 class="s-title">Stream Controls</h3>
+                        <div class="s-btn-group">
+                            <button id="startShareBtn" class="s-ctrl-btn s-btn-start">
+                                <i class="material-icons-outlined">play_arrow</i>
+                                Start Sharing
+                            </button>
+                            <button id="stopShareBtn" class="s-ctrl-btn s-btn-stop" style="display: none;">
+                                <i class="material-icons-outlined">stop</i>
+                                Stop Sharing
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="s-tips">
+                        <h4 style="font-size: 14px; margin-bottom: 12px; font-weight: 600;">Presenter Tips</h4>
+                        <div class="s-tip-item">
+                            <i class="material-icons-outlined">info</i>
+                            <p>Select "Window" to share a specific app, or "Entire Screen" for everything.</p>
+                        </div>
+                        <div class="s-tip-item">
+                            <i class="material-icons-outlined">info</i>
+                            <p>Participants only see what you select. Your notifications are private if you share only a
+                                window.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./Scripts/screenshare.js"></script>
+    <script>
+        function copyRoomId() {
+            const roomId = document.getElementById('roomId').textContent;
+            navigator.clipboard.writeText(roomId);
+            const icon = document.querySelector('.copy-btn i');
+            icon.textContent = 'check';
+            setTimeout(() => icon.textContent = 'content_copy', 2000);
+        }
+
+        // UI toggles
+        const startBtn = document.getElementById('startShareBtn');
+        const stopBtn = document.getElementById('stopShareBtn');
+        const placeholder = document.getElementById('placeholder');
+        const video = document.getElementById('screenVideo');
+
+        // Note: Screenshare.js handles the actual logic, we just add UI polish here
+        const originalEnter = window.enterRoom;
+        window.enterRoom = function () {
+            document.getElementById('roomSelection').style.display = 'none';
+            document.getElementById('screenRoom').style.display = 'flex';
+            if (originalEnter) originalEnter();
+        }
+
+        const originalJoin = window.joinExistingRoom;
+        window.joinExistingRoom = function () {
+            document.getElementById('roomSelection').style.display = 'none';
+            document.getElementById('screenRoom').style.display = 'flex';
+            if (originalJoin) originalJoin();
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archat | Help Center</title>
+    <link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --ai-accent: #9334e6;
+            --bg-light: #f8f9fa;
+            --surface: #ffffff;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+            --shadow-hover: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--surface);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f1f3f4;
+            color: var(--text-dark);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .logo-icon {
+            color: var(--ai-accent);
+            font-size: 24px;
+        }
+
+        /* --- Main Content --- */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 24px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .help-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .help-title {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .help-subtitle {
+            font-size: 18px;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- Help Grid --- */
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .help-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .help-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon-box {
+            width: 48px;
+            height: 48px;
+            background: #f3e8fd;
+            color: var(--ai-accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-q {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .faq-a {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-gray);
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .ai-help-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--ai-accent);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .ai-help-btn:hover {
+            background: #7e22ce;
+            transform: scale(1.02);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .help-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .help-title {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="dashboard.html" class="back-btn">
+                <i class="material-icons-outlined">arrow_back</i>
+                Back to Dashboard
+            </a>
+        </div>
+        <a href="#" class="logo-box">
+            <span class="material-icons-outlined logo-icon">psychology</span>
+            <span>Archat Support</span>
+        </a>
+        <div style="width: 100px;"></div>
+    </nav>
+
+    <div class="main-container">
+        <header class="help-header">
+            <h1 class="help-title">Help Center</h1>
+            <p class="help-subtitle">Everything you need to know about Archat. Find quick answers or chat with our
+                intelligent assistant.</p>
+        </header>
+
+        <div class="help-grid">
+            <!-- Video Calls -->
+            <div class="help-card">
+                <div class="card-header">
+                    <div class="card-icon-box" style="background: #e8f0fe; color: #1a73e8;">
+                        <i class="material-icons-outlined">videocam</i>
+                    </div>
+                    <h2 class="card-title">Video Calls</h2>
+                </div>
+                <div class="card-body">
+                    <div class="faq-item">
+                        <p class="faq-q">How do I start a meeting?</p>
+                        <p class="faq-a">From the dashboard, click "New Meeting". A room ID will be generated for you.
+                            Share this ID with others so they can join.</p>
+                    </div>
+                    <div class="faq-item">
+                        <p class="faq-q">Camera / Mic not working?</p>
+                        <p class="faq-a">Ensure your browser has permissions. Click the lock icon in your address bar
+                            and toggle Camera/Microphone to 'Allow'.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="ai-chat.html" class="ai-help-btn" style="background: #1a73e8;">
+                        <i class="material-icons-outlined">smart_toy</i>
+                        Troubleshoot Audio/Video
+                    </a>
+                </div>
+            </div>
+
+            <!-- Screen Sharing -->
+            <div class="help-card">
+                <div class="card-header">
+                    <div class="card-icon-box" style="background: #e6f4ea; color: #1e8e3e;">
+                        <i class="material-icons-outlined">present_to_all</i>
+                    </div>
+                    <h2 class="card-title">Screen Sharing</h2>
+                </div>
+                <div class="card-body">
+                    <div class="faq-item">
+                        <p class="faq-q">How do I present?</p>
+                        <p class="faq-a">Click the "Screen Share" icon in your meeting bar. Choose whether to share your
+                            entire screen, a window, or a specific tab.</p>
+                    </div>
+                    <div class="faq-item">
+                        <p class="faq-q">Can others see my notifications?</p>
+                        <p class="faq-a">If you share only a "Window" or a "Tab", participants will not see
+                            notifications or other parts of your desktop.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="ai-chat.html" class="ai-help-btn" style="background: #1e8e3e;">
+                        <i class="material-icons-outlined">tips_and_updates</i>
+                        Sharing Guide
+                    </a>
+                </div>
+            </div>
+
+            <!-- Chat & Collaboration -->
+            <div class="help-card">
+                <div class="card-header">
+                    <div class="card-icon-box" style="background: #fce8e6; color: #d93025;">
+                        <i class="material-icons-outlined">forum</i>
+                    </div>
+                    <h2 class="card-title">Messaging</h2>
+                </div>
+                <div class="card-body">
+                    <div class="faq-item">
+                        <p class="faq-q">Is the chat secure?</p>
+                        <p class="faq-a">Yes, all messages in Archat rooms are end-to-end encrypted. No third parties
+                            can read your conversations.</p>
+                    </div>
+                    <div class="faq-item">
+                        <p class="faq-q">Can I send emojis?</p>
+                        <p class="faq-a">The chat input has a built-in emoji picker. You can also use the Ctrl+E
+                            shortcut to open it quickly.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="ai-chat.html" class="ai-help-btn" style="background: #d93025;">
+                        <i class="material-icons-outlined">security</i>
+                        Security Details
+                    </a>
+                </div>
+            </div>
+
+            <!-- AI Sidebar -->
+            <div class="help-card" style="border: 1px solid #f3e8fd; background: #faf5ff;">
+                <div class="card-header">
+                    <div class="card-icon-box">
+                        <i class="material-icons-outlined">auto_awesome</i>
+                    </div>
+                    <h2 class="card-title">AI Assistant</h2>
+                </div>
+                <div class="card-body">
+                    <div class="faq-item">
+                        <p class="faq-q">How does AI help?</p>
+                        <p class="faq-a">Our Gemini-powered AI can summarize your meetings, explain features, and help
+                            you troubleshoot technical issues in natural language.</p>
+                    </div>
+                    <div class="faq-item">
+                        <p class="faq-q">Is it always listening?</p>
+                        <p class="faq-a">No. The AI only processes information when you explicitly interact with the
+                            Assistant features or request a manual summary.</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="ai-chat.html" class="ai-help-btn">
+                        <i class="material-icons-outlined">forum</i>
+                        Chat with Assistant
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archat | Chat Room</title>
+    <link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <script type="module">
+        import 'https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js'
+    </script>
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-light: #f8f9fa;
+            --surface: #ffffff;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--surface);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f1f3f4;
+            color: var(--text-dark);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        /* --- Main Content --- */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .room-selection {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .room-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .room-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: #fdeaea;
+            /* Light red/pink for chat */
+            color: #d93025;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .room-icon-wrapper i {
+            font-size: 40px;
+        }
+
+        .room-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .room-desc {
+            font-size: 15px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .room-id-box {
+            background: #f1f3f4;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 32px;
+        }
+
+        .room-id-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        .room-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 24px;
+            transition: 0.2s;
+        }
+
+        .room-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        /* --- Chat Interface --- */
+        .chat-container {
+            width: 100%;
+            max-width: 900px;
+            height: calc(100vh - 160px);
+            /* Leave room for Navbar and padding */
+            min-height: 400px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .chat-header {
+            padding: 12px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            z-index: 10;
+            flex-shrink: 0;
+            /* Never shrink the header */
+        }
+
+        .chat-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-room-id {
+            background: #e8f0fe;
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .copy-btn:hover {
+            color: var(--primary);
+        }
+
+        .message-area {
+            flex: 1 1 auto;
+            min-height: 0;
+            padding: 24px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .msg-bubble {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            line-height: 1.5;
+            position: relative;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+            /* Prevent bubble from collapsing */
+            word-wrap: break-word;
+            /* Handle long words */
+        }
+
+        .msg-text {
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
+
+        .msg-sent {
+            align-self: flex-end;
+            background: #1a73e8;
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .msg-received {
+            align-self: flex-start;
+            background: white;
+            color: var(--text-dark);
+            border-bottom-left-radius: 2px;
+            border: 1px solid var(--border);
+        }
+
+        .msg-sender {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+
+        .msg-time {
+            font-size: 10px;
+            margin-top: 4px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        /* --- Footer Input --- */
+        .chat-input-bar {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            flex-shrink: 0;
+            /* Never shrink the input bar */
+        }
+
+        .input-group {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            background: #f1f3f4;
+            border-radius: 24px;
+            padding: 0 16px;
+            position: relative;
+        }
+
+        .main-input {
+            flex-grow: 1;
+            background: none;
+            border: none;
+            padding: 12px 0;
+            font-size: 15px;
+            color: var(--text-dark);
+            outline: none;
+        }
+
+        .emoji-trigger {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .emoji-trigger:hover {
+            color: var(--primary);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .emoji-picker-container {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+        }
+
+        .emoji-picker-container.show {
+            display: block;
+        }
+
+        emoji-picker {
+            width: 320px;
+            height: 400px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .chat-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .msg-bubble {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar" id="selectionNavbar">
+        <div class="nav-left">
+            <a href="dashboard.html" class="back-btn">
+                <i class="material-icons-outlined">arrow_back</i>
+                Back to Dashboard
+            </a>
+        </div>
+        <a href="#" class="logo-box">
+            <span class="material-icons-outlined" style="color:#d93025">forum</span>
+            <span>Archat Chat</span>
+        </a>
+        <div style="width: 100px;"></div>
+    </nav>
+
+    <div class="main-container" id="selectionContainer">
+        <!-- Room Selection -->
+        <div id="roomSelection" class="room-selection">
+            <!-- Create Room Section -->
+            <div id="createRoom" class="room-card" style="display: none;">
+                <div class="room-icon-wrapper">
+                    <i class="material-icons-outlined">chat</i>
+                </div>
+                <h1 class="room-title">New Chat Room</h1>
+                <p class="room-desc">Start a private conversation. Share the ID below with anyone you'd like to chat
+                    with.</p>
+                <div class="room-id-box">
+                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 4px;">ROOM ID</p>
+                    <p id="newRoomId" class="room-id-value"></p>
+                </div>
+                <button onclick="enterRoom()" class="btn-full" style="background:#d93025">Start Chatting</button>
+            </div>
+
+            <!-- Join Room Section -->
+            <div id="joinRoom" class="room-card" style="display: none;">
+                <div class="room-icon-wrapper">
+                    <i class="material-icons-outlined">group</i>
+                </div>
+                <h1 class="room-title">Join a Room</h1>
+                <p class="room-desc">Enter the room ID provided by the host to join the chat conversation.</p>
+                <input type="text" id="roomIdInput" class="room-input" placeholder="Enter Room ID">
+                <button onclick="joinExistingRoom()" class="btn-full" style="background:#d93025">Join Chat</button>
+            </div>
+        </div>
+
+        <!-- Chat Room Interface -->
+        <div id="chatRoom" class="chat-container" style="display: none;">
+            <div class="chat-header">
+                <div class="chat-info">
+                    <span class="material-icons-outlined" style="color: #d93025">groups</span>
+                    <span class="chat-room-id" id="roomId"></span>
+                    <button onclick="copyRoomId()" class="copy-btn" title="Copy Room ID">
+                        <i class="material-icons-outlined">content_copy</i>
+                    </button>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <span class="material-icons-outlined" style="color: #34a853; font-size: 18px;">security</span>
+                    <span style="font-size: 13px; color: var(--text-gray);">Encrypted</span>
+                </div>
+            </div>
+
+            <div id="messageContainer" class="message-area">
+                <!-- Messages will be inserted here -->
+            </div>
+
+            <div class="chat-input-bar">
+                <div class="input-group">
+                    <button class="emoji-trigger" id="emojiButton">
+                        <i class="material-icons-outlined">sentiment_satisfied_alt</i>
+                    </button>
+                    <div class="emoji-picker-container" id="emojiPicker">
+                        <emoji-picker></emoji-picker>
+                    </div>
+                    <input type="text" id="messageInput" class="main-input" placeholder="Message..." autocomplete="off">
+                </div>
+                <button id="sendButton" class="send-btn">
+                    <i class="material-icons-outlined">send</i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./Scripts/messages.js"></script>
+    <script>
+        function copyRoomId() {
+            const roomId = document.getElementById('roomId').textContent;
+            navigator.clipboard.writeText(roomId);
+            const icon = document.querySelector('.copy-btn i');
+            icon.textContent = 'check';
+            setTimeout(() => icon.textContent = 'content_copy', 2000);
+        }
+
+        // Emoji picker logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const emojiButton = document.getElementById('emojiButton');
+            const emojiPicker = document.getElementById('emojiPicker');
+            const messageInput = document.getElementById('messageInput');
+            const picker = document.querySelector('emoji-picker');
+
+            picker.addEventListener('emoji-click', event => {
+                const cursorPos = messageInput.selectionStart;
+                const text = messageInput.value;
+                messageInput.value = text.substring(0, cursorPos) + event.detail.unicode + text.substring(cursorPos);
+                messageInput.focus();
+                emojiPicker.classList.remove('show');
+            });
+
+            emojiButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                emojiPicker.classList.toggle('show');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!emojiPicker.contains(e.target) && !emojiButton.contains(e.target)) {
+                    emojiPicker.classList.remove('show');
+                }
+            });
+        });
+
+        // UI State management for room entry
+        const originalEnter = window.enterRoom;
+        window.enterRoom = function () {
+            document.getElementById('selectionNavbar').style.display = 'none';
+            document.getElementById('roomSelection').style.display = 'none';
+            document.getElementById('chatRoom').style.display = 'flex';
+            if (originalEnter) originalEnter();
+        }
+
+        const originalJoin = window.joinExistingRoom;
+        window.joinExistingRoom = function () {
+            document.getElementById('selectionNavbar').style.display = 'none';
+            document.getElementById('roomSelection').style.display = 'none';
+            document.getElementById('chatRoom').style.display = 'flex';
+            if (originalJoin) originalJoin();
+        }
+    </script>
+</body>
+
+</html>

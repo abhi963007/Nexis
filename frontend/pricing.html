@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing | Archat</title>
+    <link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-light: #ffffff;
+            --bg-alt: #f8f9fa;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border-color: #dadce0;
+            --success: #34a853;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 1px 3px 1px rgba(60, 64, 67, 0.149);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.05);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 32px;
+        }
+
+        .nav-center {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-link {
+            color: var(--text-gray);
+            font-weight: 500;
+            font-size: 15px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text-dark);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-text {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 15px;
+            padding: 10px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-text:hover {
+            background: rgba(26, 115, 232, 0.04);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 15px;
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 80px 5% 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-gray);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- Pricing Cards --- */
+        .pricing-section {
+            padding: 60px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 40px 32px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+
+        .badge {
+            position: absolute;
+            top: -12px;
+            right: 32px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .plan-desc {
+            color: var(--text-gray);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .price span {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--text-gray);
+        }
+
+        .price-period {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-bottom: 32px;
+        }
+
+        .btn-plan {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            border: none;
+            margin-bottom: 32px;
+        }
+
+        .btn-plan.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-plan.primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-plan.outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-plan.outline:hover {
+            background: rgba(26, 115, 232, 0.04);
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .features-list i {
+            color: var(--success);
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background: var(--bg-alt);
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            margin-top: 80px;
+        }
+
+        .footer p {
+            color: var(--text-gray);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-center {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .pricing-card.featured:hover {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="index.html" class="logo-box">
+                <span class="material-icons-outlined logo-icon">videocam</span>
+                <span>Archat</span>
+            </a>
+        </div>
+        <div class="nav-center">
+            <a href="features.html" class="nav-link">Features</a>
+            <a href="pricing.html" class="nav-link active">Pricing</a>
+            <a href="security.html" class="nav-link">Security</a>
+            <a href="ai-help.html" class="nav-link">Help</a>
+        </div>
+        <div class="nav-right">
+            <a href="login.html" class="btn-text">Sign in</a>
+            <a href="Signup.html" class="btn-primary">Start a meeting</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Simple, Transparent Pricing</h1>
+        <p>Choose the plan that's right for you. All plans include core features with no hidden fees.</p>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <h3 class="plan-name">Free</h3>
+                <p class="plan-desc">Perfect for personal use and small teams</p>
+                <div class="price">$0<span>/mo</span></div>
+                <p class="price-period">Forever free</p>
+                <button class="btn-plan outline" onclick="window.location.href='Signup.html'">Get Started</button>
+                <ul class="features-list">
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Unlimited 1-on-1 meetings</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>HD video quality (720p)</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Real-time messaging</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Screen sharing</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Basic AI assistance</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Interactive whiteboard</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="pricing-card featured">
+                <div class="badge">Most Popular</div>
+                <h3 class="plan-name">Pro</h3>
+                <p class="plan-desc">For growing teams and businesses</p>
+                <div class="price">$12<span>/mo</span></div>
+                <p class="price-period">Billed monthly</p>
+                <button class="btn-plan primary" onclick="window.location.href='Signup.html'">Start Free Trial</button>
+                <ul class="features-list">
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Everything in Free, plus:</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Unlimited group meetings</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Full HD video (1080p)</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Advanced AI features</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Meeting recordings</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Cloud storage (10GB)</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Priority support</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Enterprise Plan -->
+            <div class="pricing-card">
+                <h3 class="plan-name">Enterprise</h3>
+                <p class="plan-desc">For large organizations with advanced needs</p>
+                <div class="price">Custom</div>
+                <p class="price-period">Contact us for pricing</p>
+                <button class="btn-plan outline" onclick="window.location.href='mailto:contact@archat.com'">Contact Sales</button>
+                <ul class="features-list">
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Everything in Pro, plus:</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Unlimited participants</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Dedicated account manager</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Custom integrations</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Advanced analytics</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>Unlimited cloud storage</span>
+                    </li>
+                    <li>
+                        <i class="material-icons-outlined">check_circle</i>
+                        <span>24/7 premium support</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Archat. All rights reserved. Built with ❤️ for better communication.</p>
+    </footer>
+</body>
+
+</html>

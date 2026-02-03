@@ -1,0 +1,72 @@
+.message-container {
+    height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.message {
+    margin-bottom: 15px;
+    max-width: 70%;
+    clear: both;
+}
+
+.message.sent {
+    float: right;
+}
+
+.message.received {
+    float: left;
+}
+
+.message-sender {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-bottom: 2px;
+}
+
+.message-content {
+    padding: 10px;
+    border-radius: 10px;
+    word-wrap: break-word;
+}
+
+.sent .message-content {
+    background-color: #007bff;
+    color: white;
+}
+
+.received .message-content {
+    background-color: #e9ecef;
+    color: #212529;
+}
+
+.message-time {
+    font-size: 0.7em;
+    color: #6c757d;
+    margin-top: 2px;
+    text-align: right;
+}
+
+#roomSelection {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#roomIdInput {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+}
+
+/* Clear float after messages */
+.message-container::after {
+    content: "";
+    display: table;
+    clear: both;
+} 

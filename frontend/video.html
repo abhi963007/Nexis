@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archat | Video Call</title>
+    <link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-light: #f8f9fa;
+            --surface: #ffffff;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --danger: #ea4335;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 1px 3px 1px rgba(60, 64, 67, 0.149);
+            --shadow-hover: 0 1px 3px 0 rgba(60, 64, 67, 0.302), 0 4px 8px 3px rgba(60, 64, 67, 0.149);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--surface);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f1f3f4;
+            color: var(--text-dark);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        /* --- Main Content --- */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+
+        .room-selection {
+            width: 100%;
+            max-width: 480px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .room-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .room-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: #e8f0fe;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .room-icon-wrapper i {
+            font-size: 40px;
+        }
+
+        .room-title {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .room-desc {
+            font-size: 15px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .room-id-box {
+            background: #f1f3f4;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 32px;
+        }
+
+        .room-id-label {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .room-id-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        .room-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 24px;
+            transition: 0.2s;
+        }
+
+        .room-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-full:hover {
+            background: var(--primary-hover);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* --- Video Room UI --- */
+        .video-room-container {
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
+            background: #202124;
+            position: relative;
+        }
+
+        .v-header {
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), transparent);
+        }
+
+        .v-room-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .v-room-id {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .v-copy-btn {
+            background: none;
+            border: none;
+            color: #bdc1c6;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .v-copy-btn:hover {
+            color: white;
+        }
+
+        .v-main-grid {
+            flex-grow: 1;
+            padding: 80px 24px 100px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            position: relative;
+        }
+
+        .v-tile-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .v-remote-tile {
+            width: 100%;
+            max-width: 1000px;
+            aspect-ratio: 16/9;
+            background: #3c4043;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #remoteVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .v-local-tile {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            width: 240px;
+            aspect-ratio: 16/9;
+            background: #3c4043;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            transition: 0.3s;
+        }
+
+        #localVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- Call Controls (Bottom Bar) --- */
+        .v-controls-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            z-index: 20;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        }
+
+        .v-ctrl-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(60, 64, 67, 0.9);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .v-ctrl-btn:hover {
+            background: rgba(74, 77, 81, 0.95);
+            transform: scale(1.08);
+        }
+
+        .v-ctrl-btn.active {
+            background: white;
+            color: #202124;
+        }
+
+        .v-ctrl-btn.active:hover {
+            background: #e8eaed;
+        }
+
+        .v-ctrl-btn.danger {
+            background: var(--danger);
+            width: 56px;
+            height: 52px;
+            border-radius: 26px;
+        }
+
+        .v-ctrl-btn.danger:hover {
+            background: #d93025;
+            transform: scale(1.08);
+        }
+
+        .v-ctrl-btn i {
+            font-size: 24px;
+        }
+
+        /* Settings panel that slides in/out */
+        .v-side-actions {
+            position: absolute;
+            right: 0;
+            bottom: 100%;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+            padding: 12px;
+            background: rgba(32, 33, 36, 0.95);
+            border-radius: 12px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+
+        .v-settings-wrapper {
+            position: absolute;
+            right: 24px;
+            bottom: 24px;
+            z-index: 100;
+        }
+
+        .v-settings-wrapper:hover .v-side-actions,
+        .v-side-actions:hover {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .v-settings-toggle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(60, 64, 67, 0.9);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .v-settings-toggle:hover {
+            background: rgba(74, 77, 81, 0.95);
+            transform: scale(1.08);
+        }
+
+        .v-settings-toggle i {
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .v-settings-wrapper:hover .v-settings-toggle i {
+            transform: rotate(90deg);
+        }
+
+        .v-device-select {
+            background: rgba(60, 64, 67, 0.9);
+            color: white;
+            border: 1px solid rgba(95, 99, 104, 0.5);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            min-width: 220px;
+            transition: all 0.2s ease;
+        }
+        
+        .v-device-select:hover {
+            background: rgba(74, 77, 81, 0.95);
+            border-color: #8ab4f8;
+        }
+        
+        .v-device-select:focus {
+            outline: none;
+            border-color: #8ab4f8;
+        }
+
+        .v-settings-label {
+            font-size: 11px;
+            color: #9aa0a6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .v-local-tile {
+                width: 160px;
+                bottom: 110px;
+                right: 16px;
+            }
+
+            .v-controls-bar {
+                padding: 16px 8px;
+                gap: 8px;
+            }
+
+            .v-side-actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar (Only for selection state) -->
+    <nav class="navbar" id="selectionNavbar">
+        <div class="nav-left">
+            <a href="dashboard.html" class="back-btn">
+                <i class="material-icons-outlined">arrow_back</i>
+                Back to Dashboard
+            </a>
+        </div>
+        <a href="#" class="logo-box">
+            <span class="material-icons-outlined logo-icon">videocam</span>
+            <span>Archat Video</span>
+        </a>
+        <div style="width: 100px;"></div> <!-- Spacer -->
+    </nav>
+
+    <div class="main-container" id="selectionContainer">
+        <!-- Room Selection -->
+        <div id="roomSelection" class="room-selection">
+            <!-- Create Room Section -->
+            <div id="createRoom" class="room-card" style="display: none;">
+                <div class="room-icon-wrapper">
+                    <i class="material-icons-outlined">video_call</i>
+                </div>
+                <h1 class="room-title">New Meeting</h1>
+                <p class="room-desc">Your unique room ID is ready. Share it with your team to start a secure
+                    conversation.</p>
+                <div class="room-id-box">
+                    <p class="room-id-label">Room ID</p>
+                    <p id="newRoomId" class="room-id-value"></p>
+                </div>
+                <button onclick="enterRoom()" class="btn-full">Start Meeting</button>
+            </div>
+
+            <!-- Join Room Section -->
+            <div id="joinRoom" class="room-card" style="display: none;">
+                <div class="room-icon-wrapper">
+                    <i class="material-icons-outlined">group_add</i>
+                </div>
+                <h1 class="room-title">Join a Meeting</h1>
+                <p class="room-desc">Enter the room ID provided by the host to join the ongoing video call.</p>
+                <input type="text" id="roomIdInput" class="room-input" placeholder="Enter Room ID">
+                <button onclick="joinExistingRoom()" class="btn-full">Join Room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Room UI -->
+    <div id="videoRoom" class="video-room-container" style="display: none;">
+        <div class="v-header">
+            <div class="v-room-info">
+                <span class="material-icons-outlined" style="color: #4285f4">meeting_room</span>
+                <span class="v-room-id" id="roomId"></span>
+                <button onclick="copyRoomId()" class="v-copy-btn" title="Copy ID">
+                    <i class="material-icons-outlined">content_copy</i>
+                </button>
+            </div>
+            <div class="v-status">
+                <span
+                    style="color: #34a853; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 4px;">
+                    <span class="material-icons-outlined" style="font-size: 16px;">lock</span>
+                    Secure Connection
+                </span>
+            </div>
+        </div>
+
+        <div class="v-main-grid">
+            <div class="v-tile-container">
+                <div class="v-remote-tile">
+                    <video id="remoteVideo" autoplay playsinline></video>
+                    <!-- Participant name tag -->
+                    <div
+                        style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.5); color: white; padding: 4px 12px; border-radius: 4px; font-size: 13px;">
+                        Remote Participant
+                    </div>
+                </div>
+                <div class="v-local-tile">
+                    <video id="localVideo" autoplay playsinline muted></video>
+                    <div
+                        style="position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.4); color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px;">
+                        You
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="v-controls-bar">
+            <!-- Mic Toggle -->
+            <button id="toggleMuteBtn" class="v-ctrl-btn" title="Toggle Microphone">
+                <i class="material-icons-outlined">mic_off</i>
+            </button>
+
+            <!-- Video Toggle -->
+            <button id="toggleVideoBtn" class="v-ctrl-btn" title="Toggle Video">
+                <i class="material-icons-outlined">videocam_off</i>
+            </button>
+
+            <!-- Screen Share -->
+            <button id="screenShareBtn" class="v-ctrl-btn" title="Share Screen">
+                <i class="material-icons-outlined">present_to_all</i>
+            </button>
+
+            <!-- End Call -->
+            <button id="endCallBtn" class="v-ctrl-btn danger" title="End Call">
+                <i class="material-icons-outlined">call_end</i>
+            </button>
+        </div>
+
+        <!-- Settings Panel (hover to show) -->
+        <div class="v-settings-wrapper">
+            <div class="v-side-actions">
+                <span class="v-settings-label">Camera</span>
+                <select id="cameraSelect" class="v-device-select">
+                    <option value="">Loading cameras...</option>
+                </select>
+                <button onclick="enterRoom()" id="startCallBtn" class="v-ctrl-btn active" title="Restart Stream" style="margin-top: 8px;">
+                    <i class="material-icons-outlined">refresh</i>
+                </button>
+            </div>
+            <button class="v-settings-toggle" title="Settings">
+                <i class="material-icons-outlined">settings</i>
+            </button>
+        </div>
+    </div>
+
+    <script src="./Scripts/video.js"></script>
+    <script>
+        function copyRoomId() {
+            const roomId = document.getElementById('roomId').textContent;
+            navigator.clipboard.writeText(roomId);
+            // Using a non-intrusive alert or toast would be better, but keeping functionality
+            const btn = document.querySelector('.v-copy-btn i');
+            btn.textContent = 'check';
+            setTimeout(() => btn.textContent = 'content_copy', 2000);
+        }
+
+        // Add visual toggles for controls
+        const muteBtn = document.getElementById('toggleMuteBtn');
+        const videoBtn = document.getElementById('toggleVideoBtn');
+
+        muteBtn.addEventListener('click', function () {
+            const icon = this.querySelector('i');
+            if (icon.textContent === 'mic') {
+                icon.textContent = 'mic_off';
+                this.classList.remove('active');
+            } else {
+                icon.textContent = 'mic';
+                this.classList.add('active');
+            }
+        });
+
+        videoBtn.addEventListener('click', function () {
+            const icon = this.querySelector('i');
+            const localVideo = document.getElementById('localVideo');
+            if (icon.textContent === 'videocam') {
+                icon.textContent = 'videocam_off';
+                this.classList.remove('active');
+                localVideo.style.opacity = '0';
+            } else {
+                icon.textContent = 'videocam';
+                this.classList.add('active');
+                localVideo.style.opacity = '1';
+                localVideo.style.background = '#3c4043';
+            }
+        });
+
+        // Hide/Show Navbar and Selection Container when room is entered
+        // This logic should ideally be inside video.js, but adding a hook here for UI state
+        const originalEnter = window.enterRoom;
+        window.enterRoom = function () {
+            document.getElementById('selectionNavbar').style.display = 'none';
+            document.getElementById('selectionContainer').style.display = 'none';
+            document.getElementById('videoRoom').style.display = 'flex';
+            if (originalEnter) originalEnter();
+        };
+
+        const originalJoin = window.joinExistingRoom;
+        window.joinExistingRoom = function () {
+            // If join is successful (you might need to check returns if joinExistingRoom is async)
+            document.getElementById('selectionNavbar').style.display = 'none';
+            document.getElementById('selectionContainer').style.display = 'none';
+            document.getElementById('videoRoom').style.display = 'flex';
+            if (originalJoin) originalJoin();
+        };
+    </script>
+</body>
+
+</html>

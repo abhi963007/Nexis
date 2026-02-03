@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archat | File Sharing</title>
+    <link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-light: #f8f9fa;
+            --surface: #ffffff;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --accent: #f29900;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--surface);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f1f3f4;
+            color: var(--text-dark);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .logo-icon {
+            color: var(--accent);
+            font-size: 24px;
+        }
+
+        /* --- Main Content --- */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: var(--text-gray);
+            font-size: 15px;
+        }
+
+        /* --- Upload Area --- */
+        .upload-section {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: 60px 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 40px;
+        }
+
+        .upload-section:hover {
+            border-color: var(--primary);
+            background: #f8f9ff;
+        }
+
+        .upload-icon-box {
+            width: 64px;
+            height: 64px;
+            background: #fff8e1;
+            color: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .upload-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .upload-subtitle {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 24px;
+        }
+
+        .btn-upload {
+            background: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-upload:hover {
+            background: var(--primary-hover);
+        }
+
+        /* --- Files Grid --- */
+        .files-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .files-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .file-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: 0.2s;
+        }
+
+        .file-card:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: var(--primary);
+        }
+
+        .file-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: #f1f3f4;
+            color: var(--text-gray);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-details {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-meta {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: none;
+            color: var(--text-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #f1f3f4;
+            color: var(--text-dark);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-gray);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="dashboard.html" class="back-btn">
+                <i class="material-icons-outlined">arrow_back</i>
+                Back to Dashboard
+            </a>
+        </div>
+        <a href="#" class="logo-box">
+            <span class="material-icons-outlined logo-icon">folder_shared</span>
+            <span>Archat Files</span>
+        </a>
+        <div style="width: 100px;"></div>
+    </nav>
+
+    <div class="main-container">
+        <header class="page-header">
+            <h1>Files</h1>
+            <p>Securely upload and share documents with your team members.</p>
+        </header>
+
+        <section class="upload-section" id="dropZone">
+            <div class="upload-icon-box">
+                <i class="material-icons-outlined" style="font-size: 32px;">cloud_upload</i>
+            </div>
+            <h2 class="upload-title">Drop files to upload</h2>
+            <p class="upload-subtitle">or click to browse from your computer</p>
+            <button class="btn-upload">Browse Files</button>
+            <input type="file" id="fileInput" multiple style="display: none;">
+        </section>
+
+        <section class="files-list">
+            <div class="files-header">
+                <h2>Recent Files</h2>
+                <div class="files-count" style="font-size: 13px; color: var(--text-gray);">0 files</div>
+            </div>
+
+            <div class="files-grid" id="filesGrid">
+                <!-- Example of a file card for visual reference during design -->
+                <!-- <div class="file-card">
+                    <div class="file-icon-wrapper">
+                        <i class="material-icons-outlined">description</i>
+                    </div>
+                    <div class="file-details">
+                        <p class="file-name">Meeting_Notes.pdf</p>
+                        <p class="file-meta">2.4 MB • Just now</p>
+                    </div>
+                    <div class="file-actions">
+                        <button class="action-btn"><i class="material-icons-outlined">download</i></button>
+                        <button class="action-btn"><i class="material-icons-outlined">share</i></button>
+                    </div>
+                </div> -->
+
+                <div class="empty-state">
+                    <i class="material-icons-outlined"
+                        style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;">folder_open</i>
+                    <p>No files uploaded yet. Drag some here to get started.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="./Scripts/files.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archat | AI Assistant</title>
+    <link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --ai-accent: #9334e6;
+            --bg-light: #f8f9fa;
+            --surface: #ffffff;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--surface);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #f1f3f4;
+            color: var(--text-dark);
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .logo-icon {
+            color: var(--ai-accent);
+            font-size: 24px;
+        }
+
+        /* --- Layout --- */
+        .main-app {
+            flex-grow: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .new-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: #f3e8fd;
+            color: var(--ai-accent);
+            border: none;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: 0.2s;
+        }
+
+        .new-btn:hover {
+            background: #eddffd;
+        }
+
+        .history-list {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .history-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-gray);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+            cursor: pointer;
+            margin-bottom: 4px;
+            transition: 0.2s;
+        }
+
+        .history-item i {
+            font-size: 18px;
+            color: var(--text-gray);
+        }
+
+        .history-item:hover {
+            background: #f1f3f4;
+        }
+
+        .history-item.active {
+            background: #f8f9fa;
+            font-weight: 500;
+        }
+
+        /* --- Chat Interface --- */
+        .chat-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            position: relative;
+        }
+
+        .messages-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 40px 15% 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .message {
+            display: flex;
+            gap: 20px;
+            max-width: 100%;
+        }
+
+        .msg-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f1f3f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .msg-avatar.ai {
+            background: var(--ai-accent);
+            color: white;
+        }
+
+        .msg-avatar.user {
+            background: var(--primary);
+            color: white;
+        }
+
+        .msg-text {
+            flex-grow: 1;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            padding-top: 6px;
+        }
+
+        .msg-text p {
+            margin-bottom: 12px;
+        }
+
+        .msg-text ul,
+        .msg-text ol {
+            padding-left: 24px;
+            margin-bottom: 12px;
+        }
+
+        .msg-text li {
+            margin-bottom: 4px;
+        }
+
+        /* --- Input Bar --- */
+        .input-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px 15%;
+            background: linear-gradient(to top, white 70%, transparent);
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 8px 8px 8px 24px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: 0.2s;
+        }
+
+        .input-group:focus-within {
+            border-color: #dadce0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-input {
+            flex-grow: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding: 10px 0;
+            resize: none;
+            max-height: 200px;
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--ai-accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .send-btn:hover {
+            background: #7e22ce;
+            transform: scale(1.05);
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 10px 0;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1.0);
+            }
+        }
+
+        @media (max-width: 1100px) {
+
+            .messages-container,
+            .input-bar-container {
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="dashboard.html" class="back-btn">
+                <i class="material-icons-outlined">arrow_back</i>
+                Back to Dashboard
+            </a>
+        </div>
+        <a href="#" class="logo-box">
+            <span class="material-icons-outlined logo-icon">auto_awesome</span>
+            <span>AI Assistant</span>
+        </a>
+        <div style="width: 100px;"></div>
+    </nav>
+
+    <div class="main-app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <button class="new-btn">
+                <i class="material-icons-outlined">add</i>
+                New Assistant Chat
+            </button>
+
+            <div class="history-list">
+                <h3 class="history-title">Recent Chats</h3>
+                <div class="history-item active">
+                    <i class="material-icons-outlined">chat_bubble_outline</i>
+                    <span>Getting Started</span>
+                </div>
+                <div class="history-item">
+                    <i class="material-icons-outlined">chat_bubble_outline</i>
+                    <span>Troubleshooting Audio</span>
+                </div>
+                <div class="history-item">
+                    <i class="material-icons-outlined">chat_bubble_outline</i>
+                    <span>Hosting large meetings</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Chat Main -->
+        <main class="chat-content">
+            <div id="chatMessages" class="messages-container">
+                <!-- AI Welcome Message -->
+                <div class="message">
+                    <div class="msg-avatar ai">
+                        <i class="material-icons-outlined">auto_awesome</i>
+                    </div>
+                    <div class="msg-text">
+                        <p>Hello! I'm your Archat AI Assistant. How can I help you today?</p>
+                        <p>I can assist with:</p>
+                        <ul>
+                            <li>Technical support and troubleshooting</li>
+                            <li>Feature explanations and tutorials</li>
+                            <li>Optimizing your meeting experience</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- User Example Message -->
+                <div class="message">
+                    <div class="msg-avatar user">
+                        <i class="material-icons-outlined">person</i>
+                    </div>
+                    <div class="msg-text">
+                        <p>How do I enable background blur during a video call?</p>
+                    </div>
+                </div>
+
+                <!-- AI Response Example -->
+                <div class="message">
+                    <div class="msg-avatar ai">
+                        <i class="material-icons-outlined">auto_awesome</i>
+                    </div>
+                    <div class="msg-text">
+                        <p>To enable visual effects like background blur:</p>
+                        <ol>
+                            <li>Join or start a <strong>Video Call</strong></li>
+                            <li>Look for the visual effects icon in the control bar</li>
+                            <li>Select "Blur background" or choose a custom background image</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Bar -->
+            <div class="input-bar-container">
+                <div class="input-group">
+                    <textarea id="chatInput" class="chat-input" placeholder="Ask the assistant anything..."
+                        rows="1"></textarea>
+                    <button id="sendBtn" class="send-btn">
+                        <i class="material-icons-outlined">send</i>
+                    </button>
+                </div>
+                <p style="font-size: 11px; color: var(--text-gray); text-align: center; margin-top: 12px;">
+                    AI may provide inaccurate info. Check important information.
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <script src="./Scripts/ai-chat.js"></script>
+    <script>
+        // Auto-sizing textarea
+        const textarea = document.getElementById('chatInput');
+        textarea.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Toggle history item
+        document.querySelectorAll('.history-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

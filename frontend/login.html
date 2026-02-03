@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Archat | Login</title>
+	<link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+	<style>
+		:root {
+			--primary: #1a73e8;
+			--primary-hover: #1557b0;
+			--bg-light: #f8f9fa;
+			--text-dark: #202124;
+			--text-gray: #5f6368;
+			--border: #dadce0;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Outfit', sans-serif;
+		}
+
+		body {
+			background-color: var(--bg-light);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			color: var(--text-dark);
+		}
+
+		.login-container {
+			background: white;
+			padding: 48px;
+			border-radius: 12px;
+			box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+			width: 100%;
+			max-width: 440px;
+			text-align: center;
+		}
+
+		.logo {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			font-size: 28px;
+			font-weight: 600;
+			margin-bottom: 24px;
+			color: var(--text-dark);
+		}
+
+		.logo i {
+			color: var(--primary);
+			font-size: 32px;
+		}
+
+		h1 {
+			font-size: 24px;
+			font-weight: 500;
+			margin-bottom: 12px;
+		}
+
+		.subtitle {
+			color: var(--text-gray);
+			margin-bottom: 32px;
+			font-size: 16px;
+		}
+
+		.form-group {
+			text-align: left;
+			margin-bottom: 24px;
+		}
+
+		label {
+			display: block;
+			font-size: 14px;
+			font-weight: 500;
+			margin-bottom: 8px;
+			color: var(--text-dark);
+		}
+
+		.input-wrapper {
+			position: relative;
+		}
+
+		.input-wrapper i {
+			position: absolute;
+			left: 12px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: var(--text-gray);
+			font-size: 20px;
+		}
+
+		input {
+			width: 100%;
+			padding: 12px 12px 12px 40px;
+			border: 1px solid var(--border);
+			border-radius: 4px;
+			font-size: 16px;
+			transition: border-color 0.2s;
+		}
+
+		input:focus {
+			outline: none;
+			border-color: var(--primary);
+			box-shadow: 0 0 0 1px var(--primary);
+		}
+
+		.btn-primary {
+			width: 100%;
+			padding: 12px;
+			background: var(--primary);
+			color: white;
+			border: none;
+			border-radius: 4px;
+			font-size: 16px;
+			font-weight: 500;
+			cursor: pointer;
+			transition: background 0.2s;
+			margin-top: 8px;
+		}
+
+		.btn-primary:hover {
+			background: var(--primary-hover);
+		}
+
+		.footer-links {
+			margin-top: 32px;
+			font-size: 14px;
+			color: var(--text-gray);
+		}
+
+		.footer-links a {
+			color: var(--primary);
+			text-decoration: none;
+			font-weight: 500;
+		}
+
+		.footer-links a:hover {
+			text-decoration: underline;
+		}
+
+		.back-home {
+			position: absolute;
+			top: 24px;
+			left: 24px;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			color: var(--text-gray);
+			font-size: 14px;
+			text-decoration: none;
+			font-weight: 500;
+		}
+
+		.back-home:hover {
+			color: var(--text-dark);
+		}
+	</style>
+</head>
+
+<body>
+	<a href="index.html" class="back-home">
+		<i class="material-icons-outlined">arrow_back</i>
+		Back to Home
+	</a>
+
+	<div class="login-container">
+		<div class="logo">
+			<i class="material-icons-outlined">videocam</i>
+			<span>Archat</span>
+		</div>
+		<h1>Welcome Back</h1>
+		<p class="subtitle">Use your account to continue</p>
+
+		<form id="login-form">
+			<div class="form-group">
+				<label for="lemail">Email address</label>
+				<div class="input-wrapper">
+					<i class="material-icons-outlined">mail</i>
+					<input type="email" id="lemail" placeholder="Email" required>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="lpass">Password</label>
+				<div class="input-wrapper">
+					<i class="material-icons-outlined">lock</i>
+					<input type="password" id="lpass" placeholder="Password" required>
+				</div>
+			</div>
+
+			<button type="submit" id="login" class="btn-primary">Sign in</button>
+		</form>
+
+		<div class="footer-links">
+			Don't have an account? <a href="Signup.html">Create account</a>
+		</div>
+	</div>
+
+	<script src="./Scripts/login.js"></script>
+</body>
+
+</html>

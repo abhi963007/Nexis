@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archat | Dashboard</title>
+    <link rel="icon" type="image/png" href="Images/fav_icon.PNG">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-light: #f8f9fa;
+            --surface: #ffffff;
+            --text-dark: #202124;
+            --text-gray: #5f6368;
+            --border: #dadce0;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(60,64,67,0.3), 0 1px 3px 1px rgba(60,64,67,0.15);
+            --shadow-hover: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--surface);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .date-time {
+            color: var(--text-gray);
+            font-size: 18px;
+            margin-right: 12px;
+            display: none;
+        }
+
+        @media(min-width: 768px) {
+            .date-time { display: block; }
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: #e8f0fe;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #f1f3f4;
+            color: var(--text-dark);
+        }
+
+        /* --- Main Content --- */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .welcome-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+            align-items: center;
+        }
+
+        .welcome-text h1 {
+            font-size: 44px;
+            font-weight: 400;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+        }
+
+        .welcome-text p {
+            font-size: 18px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            max-width: 480px;
+            line-height: 1.5;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-large {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .join-form {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 6px 6px 6px 16px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid transparent;
+        }
+
+        .join-form:focus-within {
+            border-color: var(--primary);
+        }
+
+        .join-input {
+            border: none;
+            outline: none;
+            font-size: 16px;
+            width: 180px;
+            color: var(--text-dark);
+        }
+
+        .btn-text {
+            color: var(--text-gray);
+            font-weight: 600;
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+
+        .btn-text.active {
+            color: var(--primary);
+        }
+
+        .hero-img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* --- Tools Grid --- */
+        .tools-section h2 {
+            font-size: 22px;
+            margin-bottom: 24px;
+            color: var(--text-dark);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .tool-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .tool-card:hover {
+            border-color: transparent;
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .tool-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tool-icon {
+            font-size: 28px;
+        }
+
+        .tool-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .tool-desc {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 24px;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-tool {
+            flex: 1;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .btn-tool-primary {
+            background: #e8f0fe;
+            color: var(--primary);
+        }
+
+        .btn-tool-primary:hover {
+            background: #d2e3fc;
+        }
+
+        .btn-tool-secondary {
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        .btn-tool-secondary:hover {
+            background: #e8eaed;
+        }
+        
+        /* Icon Colors */
+        .color-video { background: #e8f0fe; color: #1a73e8; }
+        .color-screen { background: #e6f4ea; color: #1e8e3e; }
+        .color-chat { background: #fce8e6; color: #d93025; }
+        .color-ai { background: #f3e8fd; color: #9334e6; }
+        .color-file { background: #feefc3; color: #f29900; }
+        .color-board { background: #fce8e6; color: #ea4335; }
+
+        @media (max-width: 900px) {
+            .welcome-section {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .hero-img {
+                display: none; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="logo-box">
+            <span class="material-icons-outlined logo-icon">videocam</span>
+            <span>Archat</span>
+        </a>
+        <div class="nav-right">
+            <div class="date-time" id="dateTimeDisplay"></div>
+            <div class="user-profile">
+                <!-- User email/name will be populated by JS -->
+                <span id="userEmail" style="font-size: 14px; font-weight: 500;"></span>
+                <div class="user-avatar" id="userAvatar">U</div>
+            </div>
+            <button id="logoutBtn" class="logout-btn" title="Logout">
+                <span class="material-icons-outlined">logout</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        
+        <!-- Welcome Hero -->
+        <section class="welcome-section">
+            <div class="welcome-text">
+                <h1>Premium video meetings.<br>Now free for everyone.</h1>
+                <p>We re-engineered the service that we built for secure business meetings, Google Meet, to make it free and available for all.</p>
+                
+                <div class="action-group">
+                    <a href="./video.html?action=create" class="btn-large btn-primary">
+                        <span class="material-icons-outlined">video_call</span>
+                        New meeting
+                    </a>
+                    
+                    <div class="join-form">
+                        <span class="material-icons-outlined" style="color: var(--text-gray);">keyboard</span>
+                        <input type="text" class="join-input" placeholder="Enter a code or link">
+                        <button class="btn-text" id="joinMainBtn" disabled>Join</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-image-wrapper">
+                 <!-- Using the previously generated mockup or a placeholder pattern -->
+                 <img src="https://www.gstatic.com/meet/user_edu_get_a_link_light_90698cd7b4ca04d3005c962a3756c42d.svg" alt="Meeting Illustration" style="width: 100%; max-width: 400px; display: block; margin: 0 auto;">
+            </div>
+        </section>
+
+        <!-- Tools Grid -->
+        <section class="tools-section">
+            <h2>Your Workspace</h2>
+            <div class="tools-grid">
+                
+                <!-- Video Call -->
+                <div class="tool-card">
+                    <div class="tool-icon-wrapper color-video">
+                        <span class="material-icons-outlined tool-icon">videocam</span>
+                    </div>
+                    <h3 class="tool-title">Video Call</h3>
+                    <p class="tool-desc">Start high-quality video sessions with crystal clear audio.</p>
+                    <div class="tool-actions">
+                        <a href="./video.html?action=create" class="btn-tool btn-tool-primary">Create</a>
+                        <a href="./video.html?action=join" class="btn-tool btn-tool-secondary">Join</a>
+                    </div>
+                </div>
+
+                <!-- Screen Share -->
+                <div class="tool-card">
+                    <div class="tool-icon-wrapper color-screen">
+                        <span class="material-icons-outlined tool-icon">present_to_all</span>
+                    </div>
+                    <h3 class="tool-title">Screen Share</h3>
+                    <p class="tool-desc">Share your whole screen or a single window for presentations.</p>
+                    <div class="tool-actions">
+                        <a href="./screenshare.html?action=create" class="btn-tool btn-tool-primary">Share</a>
+                        <a href="./screenshare.html?action=join" class="btn-tool btn-tool-secondary">View</a>
+                    </div>
+                </div>
+
+                <!-- Chat Room -->
+                <div class="tool-card">
+                    <div class="tool-icon-wrapper color-chat">
+                        <span class="material-icons-outlined tool-icon">chat</span>
+                    </div>
+                    <h3 class="tool-title">Chat Room</h3>
+                    <p class="tool-desc">Instant messaging rooms for quick team communication.</p>
+                    <div class="tool-actions">
+                        <a href="./messages.html?action=create" class="btn-tool btn-tool-primary">Host</a>
+                        <a href="./messages.html?action=join" class="btn-tool btn-tool-secondary">Enter</a>
+                    </div>
+                </div>
+
+                <!-- AI Assistant -->
+                <div class="tool-card">
+                    <div class="tool-icon-wrapper color-ai">
+                        <span class="material-icons-outlined tool-icon">auto_awesome</span>
+                    </div>
+                    <h3 class="tool-title">AI Assistant</h3>
+                    <p class="tool-desc">Get help and summaries from our Gemini-powered AI.</p>
+                    <div class="tool-actions">
+                        <a href="./ai-chat.html" class="btn-tool btn-tool-primary">Chat</a>
+                        <a href="./ai-help.html" class="btn-tool btn-tool-secondary">Help</a>
+                    </div>
+                </div>
+
+                <!-- File Sharing -->
+                <div class="tool-card">
+                    <div class="tool-icon-wrapper color-file">
+                        <span class="material-icons-outlined tool-icon">folder_shared</span>
+                    </div>
+                    <h3 class="tool-title">File Sharing</h3>
+                    <p class="tool-desc">Securely upload and share documents with your team.</p>
+                    <div class="tool-actions">
+                        <a href="./files.html?action=upload" class="btn-tool btn-tool-primary">Upload</a>
+                        <a href="./files.html?action=shared" class="btn-tool btn-tool-secondary">Files</a>
+                    </div>
+                </div>
+
+                <!-- Whiteboard -->
+                <div class="tool-card">
+                    <div class="tool-icon-wrapper color-board">
+                        <span class="material-icons-outlined tool-icon">gesture</span>
+                    </div>
+                    <h3 class="tool-title">Whiteboard</h3>
+                    <p class="tool-desc">Collaborate visually with real-time drawing tools.</p>
+                    <div class="tool-actions">
+                        <a href="./whiteboard.html?action=create" class="btn-tool btn-tool-primary">New</a>
+                        <a href="./whiteboard.html?action=join" class="btn-tool btn-tool-secondary">Join</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script src="./Scripts/dashboard.js"></script>
+    <script>
+        // Inline script to handle date/time and input active state
+        
+        // Date Time
+        function updateTime() {
+            const now = new Date();
+            const options = { hour: 'numeric', minute: 'numeric',   weekday: 'short', month: 'short', day: 'numeric' };
+            const timeString = now.toLocaleDateString('en-US', options);
+            document.getElementById('dateTimeDisplay').textContent = timeString;
+        }
+        setInterval(updateTime, 60000);
+        updateTime();
+
+        // Join Input Logic
+        const joinInput = document.querySelector('.join-input');
+        const joinBtn = document.getElementById('joinMainBtn');
+
+        joinInput.addEventListener('input', () => {
+            if (joinInput.value.length > 0) {
+                joinBtn.classList.add('active');
+                joinBtn.disabled = false;
+            } else {
+                joinBtn.classList.remove('active');
+                joinBtn.disabled = true;
+            }
+        });
+
+        // Join button click handler
+        joinBtn.addEventListener('click', () => {
+            const roomCode = joinInput.value.trim();
+            if (roomCode.length > 0) {
+                window.location.href = `./video.html?action=join&room=${roomCode}`;
+            }
+        });
+
+        // Also allow Enter key to join
+        joinInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && joinInput.value.trim().length > 0) {
+                window.location.href = `./video.html?action=join&room=${joinInput.value.trim()}`;
+            }
+        });
+
+        // Simulating user avatar
+        const emailEl = document.getElementById('userEmail');
+        // Wait for dashboard.js to populate email then update avatar
+        setTimeout(() => {
+            if(emailEl.textContent) {
+                 const firstLetter = emailEl.textContent.charAt(0).toUpperCase();
+                 document.getElementById('userAvatar').textContent = firstLetter;
+            }
+        }, 500);
+    </script>
+</body>
+</html>
