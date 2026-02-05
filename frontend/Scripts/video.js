@@ -65,8 +65,10 @@ let currentQuality = 'medium';
 let isScreenSharing = false;
 let reconnectAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 5;
-let isTestMode = false;
+let isMuted = false;
+let isVideoOff = false;
 let pendingIceCandidates = []; // Queue for ICE candidates that arrive before peer connection is ready
+let isTestMode = false;
 
 // Get user details from sessionStorage instead of localStorage
 let userDetails = null;
@@ -549,11 +551,9 @@ endCallBtn.addEventListener('click', () => {
         room: currentRoomId,
         email: userDetails.email
     });
-    
     window.location.href = './dashboard.html';
 });
 
-let isMuted = false;
 toggleMuteBtn.addEventListener('click', () => {
     if (localStream) {
         const audioTracks = localStream.getAudioTracks();
@@ -561,7 +561,36 @@ toggleMuteBtn.addEventListener('click', () => {
             track.enabled = !track.enabled;
         });
         isMuted = !isMuted;
-        toggleMuteBtn.textContent = isMuted ? 'Unmute' : 'Mute';
+        // Update button UI
+        const icon = toggleMuteBtn.querySelector('i');
+        if (isMuted) {
+            icon.textContent = 'mic_off';
+            toggleMuteBtn.classList.remove('active');
+        } else {
+            icon.textContent = 'mic';
+            toggleMuteBtn.classList.add('active');
+        }
+    }
+});
+
+toggleVideoBtn.addEventListener('click', () => {
+    if (localStream) {
+        const videoTracks = localStream.getVideoTracks();
+        videoTracks.forEach(track => {
+            track.enabled = !track.enabled;
+        });
+        isVideoOff = !isVideoOff;
+        // Update button UI and video visibility
+        const icon = toggleVideoBtn.querySelector('i');
+        if (isVideoOff) {
+            icon.textContent = 'videocam_off';
+            toggleVideoBtn.classList.remove('active');
+            localVideo.style.opacity = '0';
+        } else {
+            icon.textContent = 'videocam';
+            toggleVideoBtn.classList.add('active');
+            localVideo.style.opacity = '1';
+        }
     }
 });
 
