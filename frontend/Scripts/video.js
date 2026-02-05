@@ -14,8 +14,8 @@ const remoteVideo = document.getElementById('remoteVideo');
 const startCallBtn = document.getElementById('startCallBtn');
 const endCallBtn = document.getElementById('endCallBtn');
 const toggleMuteBtn = document.getElementById('toggleMuteBtn');
+const toggleVideoBtn = document.getElementById('toggleVideoBtn');
 const cameraSelect = document.getElementById('cameraSelect');
-const testModeBtn = document.getElementById('testModeBtn');
 
 // WebRTC configuration with TURN servers (using Open Relay Project - free public TURN servers)
 const configuration = {
@@ -62,13 +62,11 @@ let ws = null;
 let currentRoomId = null;
 let isInitiator = false;
 let currentQuality = 'medium';
-let isScreenSharing = false;
 let reconnectAttempts = 0;
 const MAX_RECONNECT_ATTEMPTS = 5;
 let isMuted = false;
 let isVideoOff = false;
 let pendingIceCandidates = []; // Queue for ICE candidates that arrive before peer connection is ready
-let isTestMode = false;
 
 // Get user details from sessionStorage instead of localStorage
 let userDetails = null;
@@ -416,64 +414,32 @@ async function startVideoRoom(roomId) {
             await new Promise(resolve => setTimeout(resolve, 1000));
             
             let stream;
-            if (cameraSelect.value === 'test') {
-                // Use test stream
-                stream = createTestStream();
-                const audioCtx = new AudioContext();
-                const oscillator = audioCtx.createOscillator();
-                const dest = audioCtx.createMediaStreamDestination();
-                oscillator.connect(dest);
-                oscillator.start();
-                const audioTrack = dest.stream.getAudioTracks()[0];
-                stream.addTrack(audioTrack);
-            } else {
-                // Use real camera
-                const constraints = {
-                    video: cameraSelect.value ? 
-                        { deviceId: { exact: cameraSelect.value } } : true,
-                    audio: true
-                };
+            const constraints = {
+                video: cameraSelect.value ? 
+                    { deviceId: { exact: cameraSelect.value } } : true,
+                audio: true
+            };
                 
-                try {
-                    stream = await navigator.mediaDevices.getUserMedia(constraints);
-                } catch (err) {
-                    console.error('getUserMedia error:', err);
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+            } catch (err) {
+                console.error('getUserMedia error:', err);
+                
+                // If camera is in use, try audio only first
+                if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+                    console.log('Camera in use, trying with basic constraints...');
                     
-                    // If camera is in use, try audio only first
-                    if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-                        console.log('Camera in use, trying with test video stream...');
-                        
-                        // Create test video stream and try to get real audio
-                        stream = createTestStream();
-                        try {
-                            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                            const audioTrack = audioStream.getAudioTracks()[0];
-                            if (audioTrack) {
-                                stream.addTrack(audioTrack);
-                            }
-                        } catch (audioErr) {
-                            console.log('Audio also unavailable, using synthetic audio');
-                            const audioCtx = new AudioContext();
-                            const oscillator = audioCtx.createOscillator();
-                            oscillator.frequency.value = 0; // Silent
-                            const dest = audioCtx.createMediaStreamDestination();
-                            oscillator.connect(dest);
-                            oscillator.start();
-                            stream.addTrack(dest.stream.getAudioTracks()[0]);
-                        }
-                        
-                        alert('Camera is in use by another application. Using test video mode. Your audio will still work if available.');
-                    } else {
-                        // Try with basic constraints as fallback
-                        try {
-                            stream = await navigator.mediaDevices.getUserMedia({ 
-                                video: true,
-                                audio: true
-                            });
-                        } catch (fallbackErr) {
-                            throw fallbackErr;
-                        }
+                    // Try with basic constraints as fallback
+                    try {
+                        stream = await navigator.mediaDevices.getUserMedia({ 
+                            video: true,
+                            audio: true
+                        });
+                    } catch (fallbackErr) {
+                        throw fallbackErr;
                     }
+                } else {
+                    throw err;
                 }
             }
             
@@ -738,53 +704,6 @@ async function changeVideoQuality(quality) {
     }
 }
 
-// Toggle screen sharing
-async function toggleScreenShare() {
-    try {
-        if (isScreenSharing) {
-            // Switch back to camera
-            const constraints = {
-                video: videoQualities[currentQuality],
-                audio: true
-            };
-            const newStream = await navigator.mediaDevices.getUserMedia(constraints);
-            await switchStream(newStream);
-            isScreenSharing = false;
-        } else {
-            // Switch to screen share
-            const screenStream = await navigator.mediaDevices.getDisplayMedia({
-                video: true,
-                audio: true
-            });
-            await switchStream(screenStream);
-            isScreenSharing = true;
-            
-            // Handle stream end
-            screenStream.getVideoTracks()[0].onended = async () => {
-                await toggleScreenShare();
-            };
-        }
-    } catch (error) {
-        console.error('Error toggling screen share:', error);
-    }
-}
-
-// Switch stream helper
-async function switchStream(newStream) {
-    localStream.getTracks().forEach(track => track.stop());
-    localStream = newStream;
-    localVideo.srcObject = newStream;
-    
-    // Replace tracks in peer connection
-    const senders = peerConnection.getSenders();
-    await Promise.all(newStream.getTracks().map(async track => {
-        const sender = senders.find(s => s.track.kind === track.kind);
-        if (sender) {
-            await sender.replaceTrack(track);
-        }
-    }));
-}
-
 // Error handling
 function handleError(error) {
     console.error('Connection error:', error);
@@ -884,20 +803,6 @@ document.addEventListener('DOMContentLoaded', () => {
     cameraSelect.addEventListener('change', async () => {
         if (localStream && peerConnection) {
             await startVideoRoom(currentRoomId);
-        }
-    });
-    
-    // Handle test mode toggle
-    testModeBtn.addEventListener('click', () => {
-        isTestMode = !isTestMode;
-        testModeBtn.textContent = isTestMode ? 'Disable Test Mode' : 'Enable Test Mode';
-        if (isTestMode) {
-            cameraSelect.value = 'test';
-        } else {
-            cameraSelect.selectedIndex = 0;
-        }
-        if (localStream && peerConnection) {
-            startVideoRoom(currentRoomId);
         }
     });
     
